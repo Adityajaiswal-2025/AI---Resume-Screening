@@ -1,17 +1,23 @@
-from src.utils import load_object
-from src.data_preprocessing import clean_resume
+import joblib
+import numpy as np
 
-def predict_category(resume_text):
+def predict_category(resume_text, model_path, tfidf_path, label_encoder_path):
     """
-    Predict the job category of a given resume text.
+    Predict the job category for a given resume text.
     """
-    model = load_object("artifacts/model.pkl")
-    tfidf = load_object("artifacts/tfidf.pkl")
-    label_encoder = load_object("artifacts/label_encoder.pkl")
 
-    cleaned_text = clean_resume(resume_text)
-    features = tfidf.transform([cleaned_text])
-    prediction = model.predict(features)[0]
+    # ✅ Load saved model and objects
+    model = joblib.load(model_path)
+    tfidf_vectorizer = joblib.load(tfidf_path)
+    label_encoder = joblib.load(label_encoder_path)
 
-    category = label_encoder.inverse_transform([prediction])[0]
-    return category
+    # ✅ Transform resume text into features
+    X = tfidf_vectorizer.transform([resume_text])
+
+    # ✅ Predict category
+    y_pred = model.predict(X)
+
+    # ✅ Decode predicted label
+    predicted_category = label_encoder.inverse_transform(y_pred)[0]
+
+    return predicted_category

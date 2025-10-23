@@ -1,15 +1,16 @@
-import re
-import string
+def preprocess_data(csv_path, output_path=None):
+    import pandas as pd
+    import re
+    import os
+    
+    df = pd.read_csv(csv_path)
+    
+    df['cleaned_resume'] = df['Resume'].apply(lambda x: re.sub(r'[^a-zA-Z\s]', '', str(x)))
+    df['cleaned_resume'] = df['cleaned_resume'].apply(lambda x: x.lower().strip())
 
-def clean_resume(text):
-    """
-    Clean resume text by removing URLs, punctuation, numbers, and extra spaces.
-    """
-    text = re.sub(r"http\S+\s*", " ", text)
-    text = re.sub(r"RT|cc", " ", text)
-    text = re.sub(r"#\S+", "", text)
-    text = re.sub(r"@\S+", "", text)
-    text = re.sub("[%s]" % re.escape(string.punctuation), " ", text)
-    text = re.sub(r"\d+", "", text)
-    text = re.sub(r"\s{2,}", " ", text)
-    return text.strip()
+    if output_path:
+        os.makedirs(os.path.dirname(output_path), exist_ok=True)
+        df.to_csv(output_path, index=False)
+        print(f"✅ Preprocessed data saved to {output_path}")
+
+    return df

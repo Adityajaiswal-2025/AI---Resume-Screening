@@ -2,3 +2,7 @@ pandas
 numpy
 matplotlib
 joblib
+seaborn
+streamlit==1.25.0
+scikit-learn
+PyPDF2
