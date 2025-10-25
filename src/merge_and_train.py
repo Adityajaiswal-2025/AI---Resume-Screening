@@ -8,8 +8,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report
 from sklearn.utils import shuffle
 
-ORIG_PATH = r"E:\AI-Resume screener\data\UpdatedResumeDataSet.csv"  # <--- your original path
-ENH_PATH  = r"data/EnhancedResumeDataset.csv"                  # enhanced dataset we created
+ORIG_PATH = r"E:\AI-Resume screener\data\UpdatedResumeDataSet.csv" 
+ENH_PATH  = r"data/EnhancedResumeDataset.csv"       
 MERGED_OUT = r"data\MergedResumeDataset.csv"
 ARTIFACT_DIR = r"artifacts"
 
@@ -51,7 +51,6 @@ def main():
     print("Cleaning text...")
     merged["cleaned_resume"] = merged["Resume"].apply(clean_text)
 
-    # 5) Encode labels
     le = LabelEncoder()
     y = le.fit_transform(merged["Category"])
 
@@ -60,18 +59,15 @@ def main():
     tfidf = TfidfVectorizer(stop_words='english', ngram_range=(1,2), max_features=10000, sublinear_tf=True)
     X = tfidf.fit_transform(merged["cleaned_resume"])
 
-    # 7) Train/test split (stratify when possible)
     try:
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=42, stratify=y)
     except Exception:
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.20, random_state=42)
 
-    # 8) Model train 
     print("🤖 Training LogisticRegression (class_weight='balanced') ...")
     model = LogisticRegression(max_iter=2000, class_weight='balanced', C=3.0)
     model.fit(X_train, y_train)
 
-    # 9) Evaluate
     y_pred = model.predict(X_test)
     acc = accuracy_score(y_test, y_pred)
     print(f"\n✅ Accuracy on test set: {acc:.4f}\n")
