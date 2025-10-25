@@ -8,9 +8,7 @@ from sklearn.svm import LinearSVC
 from sklearn.metrics import classification_report, accuracy_score, confusion_matrix, ConfusionMatrixDisplay
 import matplotlib.pyplot as plt
 
-# -----------------------------
-# 🧹 Step 1: Data Preprocessing
-# -----------------------------
+
 def clean_resume(resume_text):
     resume_text = re.sub(r'http\S+\s*', ' ', resume_text)
     resume_text = re.sub(r'RT|cc', ' ', resume_text)

@@ -9,6 +9,7 @@ model = joblib.load("artifacts/model.pkl")
 tfidf = joblib.load("artifacts/tfidf.pkl")
 label_encoder = joblib.load("artifacts/label_encoder.pkl")
 
+
 # ============ Text Cleaning ============
 def clean_resume(resume_text):
     resume_text = re.sub(r'http\S+\s*', ' ', resume_text)
@@ -51,3 +52,4 @@ if uploaded_file is not None:
 
 st.markdown("---")
 st.caption("👨‍💻 Developed by **Aditya Jaiswal** | AI Resume Screener Project")
+
